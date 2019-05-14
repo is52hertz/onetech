@@ -1,6 +1,6 @@
 <template>
   <div class="techTreeView">
-    <h3 v-if="!object.data">Loading...</h3>
+    <h3 v-if="!object.data">加载中...</h3>
 
     <div v-else class="tree">
       <TechTreeNode

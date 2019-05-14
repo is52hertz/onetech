@@ -1,36 +1,52 @@
 <template>
-  <a class="imgContainer"
-      :title="title" v-tippy
-      :href="clickable ? object.url() : undefined"
-      :class="clickable ? '' : 'current'">
+  <ObjectImageWrapper
+      className="imgContainer"
+      :clickable="clickable && !legacy"
+      :title="title"
+      :object="object"
+      :rightClick="rightClick">
     <div v-if="hand" class="hand" :style="object ? {} : { width: '100%', height: '100%' }" />
+    <div v-if="legacy" class="removed" />
     <div v-if="player" class="player" />
+    <div v-if="wildcard" class="wildcard"></div>
     <div v-if="uses" class="uses">{{uses}}</div>
+    <div v-if="weight" class="weight">{{weightPercent}}%</div>
     <div v-if="decay" class="decay"><span>{{decay}}</span></div>
+    <div v-if="move" class="move">移动</div>
     <div v-if="ground" class="ground"></div>
-    <div v-if="object" class="image">
+    <div v-if="object && !legacy" class="image">
       <img :id="imageID" :src="imageUrl" :alt="title" />
     </div>
-  </a>
+  </ObjectImageWrapper>
 </template>
 
 <script>
+import ObjectImageWrapper from './ObjectImageWrapper'
+
 export default {
   props: [
     'object',
     'extraObject',
     'clickable',
+    'rightClick',
     'hand',
     'hover',
     'decay',
     'ground',
     'uses',
     'player',
-    'scaleUpTo'
+    'wildcard',
+    'scaleUpTo',
+    'weight',
+    'move'
   ],
+  components: {
+    ObjectImageWrapper,
+  },
   mounted() { // Enlarge small images up to a certain amount
     if (!this.scaleUpTo) return;
     const img = document.getElementById(this.imageID);
+    if (!img) return;
     img.onload = () => {
       let multiplier = this.scaleUpTo/Math.max(img.naturalWidth, img.naturalHeight);
       if (multiplier < 1.0) {
@@ -47,11 +63,14 @@ export default {
   computed: {
     imageUrl () {
       if (!this.object) return "about:blank";
-      const suffix = this.uses == "last" ? "_last" : "";
-      return `${STATIC_PATH}/sprites/obj_${this.object.id}${suffix}.png`;
+      const suffix = this.uses == "last" && !this.object.category ? "_last" : "";
+      return `${global.staticPath}/sprites/obj_${this.object.id}${suffix}.png`;
     },
     imageID () {
       return ["image", this.object.id, Math.random().toString(36).substr(2, 7)].join("-");
+    },
+    legacy () {
+      return this.object && this.object.legacy;
     },
     title () {
       if (!this.hover)
@@ -64,17 +83,23 @@ export default {
       }
 
       if (this.player)
-        return "Player"
+        return "玩家"
+
+      if (this.wildcard)
+        return "通配符对象"
 
       if (this.hand)
-        return "Empty hands"
+        return "空手"
 
       if (this.ground)
-        return "Empty ground"
+        return "空地"
 
       if (this.decay)
-        return this.decay.replace("s", " second").replace("m", " minute").replace("h", " hour") + (parseInt(this.decay) != 1 ? 's' : '');
-    }
+        return this.decay.replace("s", " 秒").replace("m", " 分钟").replace("h", " 小时") + (parseInt(this.decay) != 1 ? '' : '');
+    },
+    weightPercent () {
+      return Math.round(this.weight*1000)/10.0;
+    },
   }
 }
 </script>
@@ -133,10 +158,26 @@ export default {
     background-image: url('../assets/player.png');
   }
 
-  .uses {
+  .removed {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: url('../assets/removed.png');
+  }
+
+  .wildcard {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: url('../assets/wildcard.png');
+  }
+
+  .uses, .weight, .move {
     position: absolute;
-    right: 4px;
-    bottom: 4px;
     color: black;
     font-weight: bold;
     font-size: 12px;
@@ -144,6 +185,21 @@ export default {
     background-color: rgba(180, 180, 180, 0.75);
     border-radius: 3px;
     z-index: 2;
+  }
+
+  .uses {
+    right: 4px;
+    bottom: 4px;
+  }
+
+  .weight {
+    left: 4px;
+    bottom: 4px;
+  }
+
+  .move {
+    left: 4px;
+    top: 4px;
   }
 
   /*.ground {

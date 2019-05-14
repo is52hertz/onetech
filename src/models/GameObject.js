@@ -3,43 +3,100 @@ export default class GameObject {
     this.fetchObjects(data => {
       this.objectsMap = {};
       for (let i in data.ids) {
-        this.objectsMap[data.ids[i]] = new GameObject(data.ids[i], data.names[i]);
+        this.objectsMap[data.ids[i]] = new GameObject(data.ids[i], data.names[i], data.difficulties[i]);
       }
       this.ids = data.ids;
       this.filters = data.filters;
       this.badges = data.badges;
       this.date = new Date(data.date);
-      this.version = data.version;
-      callback();
+      this.versions = data.versions;
+      this.foodBonus = data.foodBonus;
+      this.legacyObjectsMap = {};
+      callback(data);
     });
   }
 
   static fetchObjects(callback) {
-    fetch(`${STATIC_PATH}/objects.json`).
+    fetch(`${global.staticPath}/objects.json`).
       then(data => data.json()).
       then(callback);
   }
 
-  static byName() {
+  static sort(objects, sortBy) {
+    switch (sortBy) {
+      case "difficulty":
+        return objects.sort((a,b) => (a.difficulty || 0) - (b.difficulty || 0));
+      case "name":
+        return objects.sort((a,b) => a.name.localeCompare(b.name));
+      default: // recent
+        return objects.sort((a,b) => b.id - a.id);
+    }
+  }
+
+  static byNameLength() {
     return Object.values(this.objectsMap).sort((a,b) => a.name.length - b.name.length);
   }
 
-  static objects(amount, filter) {
-    const ids = filter ? filter.ids : this.ids;
-    return ids.slice(0, amount).map(id => this.objectsMap[id]);
+  static objects(amount, filter, sortBy, descending) {
+    let objects;
+    if (filter) {
+      objects = filter.ids.map(id => this.objectsMap[id]);
+    } else if (sortBy == "difficulty") {
+      objects = Object.values(this.objectsMap).filter(o => o.difficulty);
+    } else {
+      objects = Object.values(this.objectsMap);
+    }
+    let sorted = this.sort(objects, sortBy);
+    if (descending) {
+      sorted.reverse();
+    }
+    return sorted.slice(0, amount);
   }
 
   static find(id) {
-    return this.objectsMap[id];
+    if (!id) return;
+    return this.objectsMap[id.split("-")[0]] || this.legacyObjectsMap[id.split("-")[0]];
+  }
+
+  static findByName(name) {
+    if (!name) return;
+    return Object.values(this.objectsMap).find(o => o.name == name);
+  }
+
+  static findAndLoad(id) {
+    const object = this.find(id);
+    if (!object) return;
+    object.loadData();
+    return object;
+  }
+
+  static findAndLoadByName(name) {
+    const object = this.findByName(name);
+    if (!object) return;
+    object.loadData();
+    return object;
   }
 
   static findFilter(key) {
     return this.filters.find(f => f.key == key);
   }
 
-  constructor(id, name) {
+  static addLegacyObject(attributes) {
+    if (this.legacyObjectsMap[attributes.id])
+      return;
+    const object = new GameObject(attributes.id, attributes.name, null);
+    if (attributes.category) {
+      object.category = true;
+    } else {
+      object.legacy = true;
+    }
+    this.legacyObjectsMap[object.id] = object;
+  }
+
+  constructor(id, name, difficulty) {
     this.id = id;
     this.name = name;
+    this.difficulty = difficulty;
     this.data = null;
   }
 
@@ -64,15 +121,17 @@ export default class GameObject {
   }
 
   url(subpath) {
-    const path = [this.id, this.name.split(' ').join('-')];
+    if (this.legacy)
+      return "/not-found";
+    const path = [`${this.id}-${this.name.replace(/[^\w\u4e00-\u9fa5]+/g, '-')}`];
     if (subpath) path.push(subpath);
-    return '#' + path.map(encodeURIComponent).join('/');
+    return '/' + path.map(encodeURIComponent).join("/");
   }
 
   clothingPart() {
     if (!this.data)
       return null;
-    const parts = {'h': "Head", 't': "Chest", 'b': "Bottom", 's': "Foot", 'p': "Back"};
+    const parts = {'h': "头部", 't': "身体", 'b': "腿部", 's': "脚部", 'p': "背后"};
     return parts[this.data.clothing];
   }
 
@@ -81,18 +140,26 @@ export default class GameObject {
   }
 
   insulationPercent() {
-    return (this.data.insulation*10000).toFixed()/100;
+    return this.toPercent(this.data.insulation, 2);
+  }
+
+  toPercent(num, places) {
+    return +(num*100).toFixed(places);
   }
 
   loadData() {
-    if (this.data) return;
-    this.fetchData(data => this.data = data);
+    if (this.data || this.loading) return;
+    this.loading = true;
+    this.fetchData(data => {
+      this.loading = false;
+      this.data = data;
+    });
   }
 
   sizeText(size) {
-    if (size > 1) return "Large";
-    if (size == 1) return "Small";
-    return "Tiny";
+    if (size > 1) return "大型";
+    if (size == 1) return "小型";
+    return "微型";
   }
 
   slotSize() {
@@ -103,8 +170,21 @@ export default class GameObject {
     return this.sizeText(this.data.size);
   }
 
+  spawnText() {
+    if (!this.mapChanceData()) return;
+    const level = Math.ceil(parseFloat(this.mapChanceData())*15)-1;
+    if (level == 0) return "非常稀有";
+    if (level < 3) return "稀有";
+    if (level < 7) return "不常见";
+    return "常见";
+  }
+
+  mapChanceData() {
+    return this.mapChance || this.data && this.data.mapChance;
+  }
+
   fetchData(callback) {
-    fetch(`${STATIC_PATH}/objects/${this.id}.json`).
+    fetch(`${global.staticPath}/objects/${this.id}.json`).
       then(data => data.json()).
       then(callback);
   }

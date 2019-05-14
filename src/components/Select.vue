@@ -85,6 +85,14 @@
     height: 0;
   }
 
+  /* Search Button */
+  .v-select .dropdown-toggle .search-icon {
+    position: absolute;
+    top: 9px;
+    left: 10px;
+    cursor: pointer;
+  }
+
   /* Clear Button */
   .v-select .dropdown-toggle .clear {
     position: absolute;
@@ -109,6 +117,7 @@
   }
   .v-select.open .dropdown-toggle {
     border-bottom-color: transparent;
+    border-bottom: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
@@ -142,7 +151,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     height: 26px;
-    margin: 4px 1px 0px 3px;
+    margin: 4px 1px 0px 32px;
     padding: 1px 0.25em;
     float: left;
     line-height: 24px;
@@ -201,6 +210,7 @@
     outline: none;
     margin: 0;
     padding: 0 .5em;
+    padding-left: 35px;
     width: 10em;
     max-width: 100%;
     background: none;
@@ -306,11 +316,19 @@
   .fade-leave-to {
     opacity: 0;
   }
+
+  /* Override */
+
+  /* Avoid mobile wrap bug */
+  .v-select .selected-tag {
+    position: absolute;
+  }
 </style>
 
 <template>
   <div :dir="dir" class="dropdown v-select" :class="dropdownClasses">
     <div ref="toggle" @mousedown.prevent="toggleDropdown" :class="['dropdown-toggle', 'clearfix']">
+      <img src="../assets/search.svg" width="19" height="20" class="search-icon" />
 
       <span class="selected-tag" v-for="option in valueAsArray" v-bind:key="option.index">
         <slot name="selected-option" v-bind="option">
@@ -343,13 +361,13 @@
               aria-label="Search for option"
       >
 
-      <button 
-        v-show="showClearButton" 
-        :disabled="disabled" 
+      <button
+        v-show="showClearButton"
+        :disabled="disabled"
         @click="clearSelection"
-        type="button" 
-        class="clear" 
-        title="Clear selection" 
+        type="button"
+        class="clear"
+        title="Clear selection"
       >
         <span aria-hidden="true">&times;</span>
       </button>
@@ -357,7 +375,7 @@
       <i v-if="!noDrop" ref="openIndicator" role="presentation" class="open-indicator"></i>
 
       <slot name="spinner">
-        <div class="spinner" v-show="mutableLoading">Loading...</div>
+        <div class="spinner" v-show="mutableLoading">加载中...</div>
       </slot>
     </div>
 

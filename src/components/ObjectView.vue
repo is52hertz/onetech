@@ -1,5 +1,5 @@
 <template>
-  <a class="nostyle" :href="object.url()">
+  <router-link class="nostyle" :to="object.url()">
     <div class="objectView">
       <h3>{{object.name}}</h3>
       <div class="badges">
@@ -9,15 +9,18 @@
         </div>
       </div>
       <ObjectImage :object="object" scaleUpTo="80" />
+      <div class="spawnInfo" v-if="spawnChance">
+        几率: {{object.toPercent(spawnChance, 2)}}%
+      </div>
     </div>
-  </a>
+  </router-link>
 </template>
 
 <script>
 import ObjectImage from './ObjectImage';
 
 export default {
-  props: ['object'],
+  props: ["object", "spawnChance"],
   components: {
     ObjectImage
   },
@@ -31,20 +34,27 @@ export default {
         case "heat":      return require("../assets/badges/heat.svg");
         case "water":     return require("../assets/badges/water.svg");
         case "natural":   return require("../assets/badges/natural.svg");
-        default:          throw `Unknown badge key: ${badge.key}`;
+        default:          throw `未知分类: ${badge.key}`;
       }
     },
     badgeText(badge) {
       switch (badge.key) {
-        case "clothing":  return `${badge.value} insulation`;
-        case "food":      return `${badge.value} food value`;
-        case "tool":      return `Tool with ${badge.value || "infinite"} uses`;
-        case "container": return `Holds ${badge.value} items`;
-        case "heat":      return `Emits ${badge.value} heat`;
-        case "water":     return `${badge.value} water uses`;
-        case "natural":   return "Spawns naturally";
-        default:          throw `Unknown badge key: ${badge.key}`;
+        case "clothing":  return `${badge.value} 保暖`;
+        case "food":      return this.foodBadgeText(badge.value);
+        case "tool":      return `工具 可用 ${badge.value || "infinite"} 次`;
+        case "container": return `容纳 ${badge.value} 个物品`;
+        case "heat":      return `产生 ${badge.value} 点热量`;
+        case "water":     return `${badge.value} 用水`;
+        case "natural":   return "自然生成";
+        default:          throw `未知分类: ${badge.key}`;
       }
+    },
+    foodBadgeText(value) {
+      const parts = value.toString().split(" x ");
+      parts[0] += " 点食物";
+      if (parts[1])
+        parts[1] += "次";
+      return parts.join(", ");
     }
   }
 }

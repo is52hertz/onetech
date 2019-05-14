@@ -1,6 +1,9 @@
 <template>
   <div class="ingredients">
-    <h4>Ingredients</h4>
+    <h4>原料</h4>
+    <div class="filterInstructions">
+      右键筛选配方
+    </div>
     <div class="ingredientObjects">
       <ObjectImage
         v-for="object in objects"
@@ -9,7 +12,8 @@
         clickable="true"
         :object="object"
         :uses="ingredientUses(object)"
-        :key="object.id" />
+        :key="object.id"
+        :rightClick="rightClickObject" />
     </div>
   </div>
 </template>
@@ -20,7 +24,7 @@ import GameObject from '../models/GameObject';
 import ObjectImage from './ObjectImage';
 
 export default {
-  props: ['ingredients'],
+  props: ['ingredients', 'title', 'rightClickObject'],
   components: {
     ObjectImage
   },
@@ -28,6 +32,9 @@ export default {
     objects() {
       const uniqueIDs = this.ingredients.filter((id, i) => this.ingredients.indexOf(id) == i);
       return uniqueIDs.map(id => GameObject.find(id))
+    },
+    titleWithDefault() {
+      return this.title || "Ingredients";
     }
   },
   methods: {
@@ -40,7 +47,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .ingredients {
     background-color: #3c3c3c;
     margin: 10px;
@@ -80,5 +87,17 @@ export default {
   .ingredients .ingredientObject:hover {
     border-color: #aaa;
     background-color: #666;
+  }
+
+  .ingredients .filterInstructions {
+    text-align: center;
+    color: #BBB;
+    font-size: 14px;
+  }
+
+  @media only screen and (max-width: 768px) {
+    .ingredients .filterInstructions {
+      display: none;
+    }
   }
 </style>

@@ -1,7 +1,15 @@
 <template>
   <div class="recipeTransition">
     <!-- What object is being used -->
-    <div class="leftSide">
+    <div class="leftSide" v-if="transition.subSteps">
+      <div class="expandButton"
+          :class="{active: expanded}"
+          title="扩展配方" v-tippy
+          @click.prevent="$emit('expand', transition)">
+        <img src="../assets/recipe.png" width="41" height="42" />
+      </div>
+    </div>
+    <div class="leftSide" v-else>
       <ObjectImage class="recipeTransitionObject"
                   v-if="transition.decay"
                   hover="true"
@@ -9,9 +17,11 @@
 
       <ObjectImage class="recipeTransitionObject"
                   v-else-if="transition.actorID || transition.hand"
-                  hand="true" hover="true"
+                  :hand="transition.hand" hover="true"
                   :object="actor"
-                  :clickable="transition.actorID" />
+                  :uses="transition.actorUses"
+                  :clickable="transition.actorID"
+                  :rightClick="rightClickObject" />
 
       <div class="plus" v-if="showPlus">+</div>
 
@@ -20,7 +30,9 @@
                   v-if="transition.targetID"
                   hover="true"
                   :object="target"
-                  clickable="true" />
+                  :uses="transition.targetUses"
+                  clickable="true"
+                  :rightClick="rightClickObject" />
 
       <ObjectImage class="recipeTransitionObject"
                   v-else-if="transition.targetPlayer"
@@ -37,11 +49,13 @@
 
     <div class="rightSide">
       <!-- What is the resulting object? -->
-      <ObjectImage class="recipeTransitionObject"
+      <ObjectImage :class="{recipeTransitionObject: true, highlight: highlight}"
                   hover="true"
                   :object="result"
-                  :uses="resultCount"
-                  clickable="true" />
+                  :uses="this.transition.uses"
+                  :weight="transition.weight"
+                  clickable="true"
+                  :rightClick="rightClickObject" />
     </div>
   </div>
 </template>
@@ -52,7 +66,7 @@ import GameObject from '../models/GameObject';
 import ObjectImage from './ObjectImage';
 
 export default {
-  props: ['transition'],
+  props: ['transition', 'rightClickObject', 'expanded', 'highlight'],
   components: {
     ObjectImage
   },
@@ -68,16 +82,12 @@ export default {
     },
     result() {
       return GameObject.find(this.transition.id);
-    },
-    resultCount() {
-      if (this.transition.count)
-        return `x${this.transition.count}`;
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .recipeTransition {
     overflow: hidden;
 
@@ -114,7 +124,8 @@ export default {
     width: 70px;
     height: 70px;
   }
-  .recipeTransition .recipeTransitionObject:hover {
+  .recipeTransition .recipeTransitionObject:hover,
+  .recipeTransition .recipeTransitionObject.highlight {
     border: 1px solid #aaa;
     background-color: #666;
   }
@@ -143,6 +154,30 @@ export default {
     margin: -10px;
     margin-left: 0;
     margin-right: 0;
+  }
+
+  .expandButton {
+    height: 70px;
+    background-color: #555;
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .expandButton:hover {
+    border: 1px solid #aaa;
+    background-color: #666;
+  }
+  .expandButton.active {
+    border: 1px solid #aaa;
+    background-color: #222;
+  }
+
+  .stepsCount {
+    padding-left: 15px;
+    font-size: 24px;
   }
 
 </style>

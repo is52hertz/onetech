@@ -1,19 +1,37 @@
 <template>
   <div class="techTree">
-    <h2><a :href="object.url()">{{object.name}}</a></h2>
-    <h3>Tech Tree</h3>
+    <h2><router-link :to="object.url()">{{object.name}}</router-link></h2>
+    <h3>科技树</h3>
 
     <TechTreeView :object="object" />
   </div>
 </template>
 
 <script>
+import GameObject from '../models/GameObject';
+
 import TechTreeView from './TechTreeView';
 
 export default {
-  props: ['object'],
   components: {
     TechTreeView
+  },
+  data() {
+    return {
+      object: GameObject.findAndLoad(this.$route.params.id),
+    };
+  },
+  created() {
+    if (!this.object)
+      this.$router.replace("/not-found");
+  },
+  watch: {
+    '$route' (to, from) {
+      this.object = GameObject.findAndLoad(this.$route.params.id);
+    }
+  },
+  metaInfo() {
+    return {title: `${this.object.name} Tech Tree`};
   }
 }
 </script>

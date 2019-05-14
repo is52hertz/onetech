@@ -1,41 +1,20 @@
-const GameData = require('./src/GameData');
-
-const gitURL = process.env.ONETECH_PROCESS_GIT_URL || "https://github.com/jasonrohrer/OneLifeData7.git";
-const gitPath = process.env.ONETECH_PROCESS_GIT_PATH || (__dirname + "/OneLifeData7");
-
-const gameData = new GameData(__dirname, gitPath);
-
-if (process.argv.includes('download')) {
-  console.log("Downloading data...");
-  gameData.download(gitURL);
-} else {
-  gameData.verifyDownloaded();
+if (!process.env.ONETECH_FOOD_BONUS) {
+  process.env.ONETECH_FOOD_BONUS = 2;
 }
 
-console.log("Importing objects...");
-gameData.importObjects();
-gameData.importCategories();
-gameData.importTransitions();
+const MainProcessor = require('./src/MainProcessor');
 
-console.log("Populating versions...");
-gameData.populateVersions();
+const processor = new MainProcessor(__dirname);
 
-console.log("Calculating object depth...");
-gameData.calculateObjectDepth();
+processor.doDownload = process.argv.includes('download');
+processor.doSprites = processor.doDownload || process.argv.includes('sprites');
+processor.doSounds = processor.doDownload || process.argv.includes('sounds');
 
-console.log("Exporting objects...");
-gameData.exportObjects();
+console.log("--- Processing static-edge ---");
+const unprocessedVersion = processor.process(null);
 
-if (process.argv.includes('sprites') || process.argv.includes('download')) {
-  console.log("Converting sprite images...");
-  gameData.convertSpriteImages();
-  gameData.convertGroundImages();
-
-  console.log("Processing sprites...");
-  gameData.processSprites();
-}
-
-if (!process.argv.includes('dev')) {
-  console.log("Copying static-dev to static...");
-  gameData.syncStaticDir();
+if (false && unprocessedVersion) {
+  processor.doDownload = false;
+  console.log(`--- Processing static for v${unprocessedVersion.id} ---`);
+  processor.process(unprocessedVersion);
 }

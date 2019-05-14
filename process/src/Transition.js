@@ -27,10 +27,12 @@ class Transition {
     this.targetMinUseFraction = data[4] || 0;
     this.reverseUseActor = data[5] == '1';
     this.reverseUseTarget = data[6] == '1';
-    this.move = data[7] || 0;
+    this.move = parseInt(data[7] || 0);
     this.desiredMoveDist = data[8] || 1;
+    this.noUseActor = data[9] == '1';
+    this.noUseTarget = data[10] == '1';
 
-    this.hand = this.actorID == 0;
+    this.playerActor = this.actorID == 0;
     this.tool = this.actorID >= 0 && this.actorID == this.newActorID;
     this.targetRemains = this.targetID >= 0 && this.targetID == this.newTargetID;
 
@@ -73,6 +75,22 @@ class Transition {
     return this.targetID === '-1' && this.newTargetID === '0' && this.actorID != this.newActorID;
   }
 
+  matchesGenericTransition(transition) {
+    if (this == transition)
+      return false;
+    return this.matchesGenericActor(transition) || this.matchesGenericTarget(transition);
+  }
+
+  matchesGenericActor(transition) {
+    return this.actorID == transition.actorID && this.tool && this.targetID > 0;
+  }
+
+  matchesGenericTarget(transition) {
+    if (transition.lastUseActor && !this.lastUseTarget)
+      return false;
+    return this.targetID == transition.actorID && this.targetRemains && this.actorID > 0;
+  }
+
   isLastUse() {
     return this.lastUseActor || this.lastUseTarget;
   }
@@ -81,8 +99,43 @@ class Transition {
     return this.targetID === '0' || this.targetID === '-1' && this.actor.data.foodValue > 0;
   }
 
+  totalDecaySeconds() {
+    if (this.autoDecaySeconds > 0 && this.target.data.numUses > 1 && this.lastUseTarget)
+      return parseInt(this.autoDecaySeconds) * this.target.data.numUses;
+    return this.autoDecaySeconds;
+  }
+
   clone() {
     return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
+  }
+
+  applyActorUse() {
+    return !this.noUseActor && (
+            this.tool ||
+            this.newActor &&
+            this.newActor.data.numUses === this.actor.data.numUses);
+  }
+
+  applyTargetUse() {
+    return !this.noUseTarget && (
+            this.targetRemains ||
+            this.newTarget &&
+            this.newTarget.data.numUses === this.target.data.numUses);
+  }
+
+  hand() {
+    return !this.decay && (this.playerActor || !(this.actor && (this.actor.canMove() || this.actor.isGlobalTrigger())));
+  }
+
+  totalDepth() {
+    let total = 0;
+    if (this.actor) {
+      total += this.actor.depth.value;
+    }
+    if (this.target) {
+      total += this.target.depth.value;
+    }
+    return total;
   }
 
   jsonData() {
@@ -90,21 +143,39 @@ class Transition {
 
     if (this.actor) {
       result.actorID = this.actor.id;
-      if (this.actor.numUses() > 1) {
-        if (this.lastUseActor)
-          result.actorUses = this.reverseUseActor ? "max" : "last";
-        else if (this.tool)
+      if (this.actor.data.numUses > 1 || this.actor.isCategory()) {
+        if (this.lastUseActor || this.actorMinUseFraction == 1) {
+          result.actorUses = this.reverseUseActor || this.actorMinUseFraction == 1 ? "max" : "last";
+          if (this.reverseUseActor && this.actor.data.useChance < 1.0) {
+            result.newActorWeight = this.actor.data.useChance;
+          }
+        } else if (this.applyActorUse()) {
           result.newActorUses = this.reverseUseActor ? "+1" : "-1";
+          if (this.actor.data.useChance < 1.0) {
+            result.newActorWeight = this.actor.data.useChance;
+          }
+        }
+      } else if (this.reverseUseActor) {
+        result.newActorUses = "last";
       }
     }
 
     if (this.target) {
       result.targetID = this.target.id;
-      if (this.target.numUses() > 1) {
-        if (this.lastUseTarget)
-          result.targetUses = this.reverseUseTarget ? "max" : "last";
-        else if (this.targetRemains)
+      if (this.target.data.numUses > 1 || this.target.isCategory()) {
+        if (this.lastUseTarget || this.targetMinUseFraction == 1) {
+          result.targetUses = this.reverseUseTarget || this.targetMinUseFraction == 1 ? "max" : "last";
+          if (this.reverseUseTarget && this.target.data.useChance < 1.0) {
+            result.newTargetWeight = this.target.data.useChance;
+          }
+        } else if (this.applyTargetUse()) {
           result.newTargetUses = this.reverseUseTarget ? "+1" : "-1";
+          if (this.target.data.useChance < 1.0) {
+            result.newTargetWeight = this.target.data.useChance;
+          }
+        }
+      } else if (this.reverseUseTarget) {
+        result.newTargetUses = "last";
       }
     }
 
@@ -117,13 +188,19 @@ class Transition {
     if (this.newExtraTarget)
       result.newExtraTargetID = this.newExtraTarget.id;
 
+    if (this.newActorWeight)
+      result.newActorWeight = this.newActorWeight;
+
+    if (this.newTargetWeight)
+      result.newTargetWeight = this.newTargetWeight;
+
     if (this.targetsPlayer())
       result.targetPlayer = true;
 
     if (this.targetRemains)
       result.targetRemains = true;
 
-    if (this.hand)
+    if (this.hand())
       result.hand = true;
 
     if (this.tool)
@@ -131,6 +208,10 @@ class Transition {
 
     if (this.decay)
       result.decay = this.decay;
+
+    if (this.move > 0) {
+      result.move = this.move;
+    }
 
     return result;
   }

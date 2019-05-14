@@ -1,86 +1,58 @@
 <template>
   <div id="app">
-    <h1>Crafting reference for One Hour One Life</h1>
+    <h1>
+      <router-link to="/">一小时人生合成指南</router-link>
+    </h1>
+	<div class="subtitle">
+		<span><a href="http://www.onehouronelife.cn">中文维基</a></span>
+		<span><a href="https://edge.onetech.info/versions">更新日志</a></span>
+	</div>
 
-    <h2 v-if="loading">Loading...</h2>
+    <h2 v-if="loading">加载中...</h2>
 
     <div v-else>
-      <div class="updated">
-        Updated {{lastDate}} (v{{lastVersion}})
-      </div>
+		
+	
+      <ObjectSearch />
 
-      <ObjectSearch :selectedObject="selectedObject" />
-
-      <div v-if="selectedObject">
-        <TechTree :object="selectedObject" v-if="subpage == 'tech-tree'" />
-        <Recipe :object="selectedObject" v-else-if="subpage == 'recipe'" />
-        <ObjectInspector :object="selectedObject" v-else />
-      </div>
-
-      <div v-else>
-        <div class="filterList">
-          <div class="filter" v-for="filter in filters" >
-            <ObjectFilter :filter="filter" :selected="filter == selectedFilter" />
-          </div>
-        </div>
-        <div class="objectList">
-          <div class="object" v-for="object in shownObjects" >
-            <ObjectView :object="object" />
-          </div>
-        </div>
-      </div>
-
+      <router-view />
     </div>
   </div>
 </template>
 
 <script>
-import GameObject from './models/GameObject'
+import GameObject from './models/GameObject';
+import Biome from './models/Biome';
 
-import ObjectView from './components/ObjectView';
 import ObjectSearch from './components/ObjectSearch';
-import ObjectFilter from './components/ObjectFilter';
+import ObjectBrowser from './components/ObjectBrowser';
 import ObjectInspector from './components/ObjectInspector';
 import TechTree from './components/TechTree';
 import Recipe from './components/Recipe';
+import RecipeForLetters from './components/RecipeForLetters';
+import BiomeInspector from './components/BiomeInspector';
+import ChangeLog from './components/ChangeLog';
+import NotFound from './components/NotFound';
 
 export default {
   name: 'app',
   components: {
-    ObjectView,
     ObjectSearch,
-    ObjectFilter,
-    ObjectInspector,
-    TechTree,
-    Recipe,
   },
   data () {
     return {
       loading: true,
-      showAmount: 24,
-      selectedObject: null,
-      selectedFilter: null,
-      subpage: false,
     }
   },
-  created () {
-    window.onhashchange = () => this.parseHash();
-    window.onscroll = () => this.handleScroll();
-  },
   beforeMount () {
-    GameObject.load(() => {
+    this.redirectOldHash();
+    GameObject.load((data) => {
+      Biome.setup(data.biomeIds, data.biomeNames);
       this.loading = false;
-      this.parseHash();
     });
   },
   computed: {
-    shownObjects () {
-      return GameObject.objects(this.showAmount, this.selectedFilter);
-    },
-    filters () {
-      return GameObject.filters;
-    },
-    lastDate () {
+    lastDate() {
       const months = [
         "January", "February", "March",
         "April", "May", "June", "July",
@@ -92,73 +64,58 @@ export default {
       var year = GameObject.date.getFullYear();
       return `${months[month]} ${day}, ${year}`;
     },
-    lastVersion () {
-      return GameObject.version;
+    latestVersion() {
+      return GameObject.versions[0];
+    },
+    showWhatsNew() {
+      if (process.env.ONETECH_MOD_NAME)
+        return false;
+      if (this.$route.path == "/versions")
+        return false;
+      return true;
+    },
+    gameName() {
+      return process.env.ONETECH_MOD_NAME || "One Hour One Life";
+    },
+    gameUrl() {
+      return process.env.ONETECH_MOD_URL;
+    },
+    onEdge() {
+      return global.edge;
     }
   },
   methods: {
-    parseHash () {
-      if (this.loading) return;
-      if (!window.location.hash) {
-        this.selectedObject = null;
-        this.selectedFilter = null;
-        this.subpage = false;
-        this.showAmount = 24;
-        this.scrollTop();
-      } else {
-        const path = window.location.hash.split('#')[1].split('/');
-        this.routePath(path);
-      }
-      this.updateTitle();
+    redirectOldHash() {
+      if (!window.location.hash) return;
+      const path = window.location.hash.substr(1).split("/");
+      if (parseInt(path[0]) > 0) // Object ID route
+        path.unshift([path.shift(), path.shift()].join("-"));
+      this.$router.replace("/" + path.join("/"));
     },
-    routePath (path) {
-      if (path[0] == "filter") {
-        this.selectedFilter = GameObject.findFilter(path[1]);
-        this.selectedObject = null;
-        this.subpage = false;
-      } else {
-        const object = GameObject.find(path[0]);
-        if (object) {
-          this.selectedObject = object;
-          this.selectedObject.loadData();
-          this.subpage = path[2];
-          this.selectedFilter = null;
-          this.scrollTop();
-        }
-      }
+    unreleasedContentUrl() {
+      return "http://guide.onehouronelife.cn/" + window.location.pathname;
     },
-    scrollTop () {
-      document.body.scrollTop = document.documentElement.scrollTop = 0;
-    },
-    updateTitle () {
-      var parts = []
-      if (this.selectedObject) {
-        parts.push(this.selectedObject.name);
-        if (this.subpage == "tech-tree")
-          parts.push("Tech Tree");
-        if (this.subpage == "recipe")
-          parts.push("Recipe");
-      } else if (this.selectedFilter) {
-        parts.push(this.selectedFilter.name);
-      } else {
-        parts.push("Crafting reference for One Hour One Life");
-      }
-      parts.push("onetech");
-      document.title = parts.join(" - ");
-    },
-    handleScroll () {
-      if (!this.selectedObject) {
-        if (window.scrollY + window.innerHeight > document.body.clientHeight - 100) {
-          if (!this.loadingMore) {
-            this.loadingMore = true;
-            this.showAmount += 24;
-          }
-        } else {
-          this.loadingMore = false;
-        }
-      }
+    releasedContentUrl() {
+      return "http://guide.onehouronelife.cn/" + window.location.pathname;
     }
   },
+  metaInfo: {
+    title: "一小时人生合成指南",
+    titleTemplate: '%s | onetech'
+  },
+  routes: [
+    {path: "/", component: ObjectBrowser},
+    {path: "/not-found", component: NotFound},
+    {path: "/filter/:filter", component: ObjectBrowser},
+    {path: "/letters", component: RecipeForLetters},
+    {path: "/versions", component: ChangeLog},
+    {path: "/versions/:id", component: ChangeLog},
+    {path: "/biomes/:id", component: BiomeInspector},
+    {path: "/:id/tech-tree", component: TechTree},
+    {path: "/:id/recipe", component: Recipe},
+    {path: "/:id", component: ObjectInspector},
+    {path: "*", redirect: "/not-found"},
+  ]
 }
 </script>
 
@@ -188,65 +145,32 @@ export default {
   }
 
   a {
-    color: #42b983;
+    color: inherit;
   }
 
   #app > h1 {
     margin-bottom: 0;
-  }
-
-  .updated {
-    color: #999;
-    text-align: center;
-    margin-bottom: 20px;
-    font-style: italic;
-  }
-
-  .filterList {
-    background-color: #222;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 10px 0;
-    box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .objectList {
-    background-color: #222;
-    border-radius: 5px;
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0px;
-    box-sizing: border-box;
-
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .objectView .imgContainer {
-    width: 128px;
-    height: 128px;
-  }
-
-  .filterList > .filter {
-    min-width: 200px;
-    width: 33.3333%;
-  }
-
-  .objectList > .object {
-    min-width: 200px;
-    width: 33.3333%;
-  }
-
-  @media only screen and (max-width: 768px) {
-    .filterList > .filter {
-      min-width: 150px;
-      width: 50%;
+    a {
+      text-decoration: none;
+      &.router-link-exact-active {
+        cursor: default;
+      }
     }
-    .objectList > .object {
-      min-width: 150px;
-      width: 50%;
+  }
+
+  .edgeTitle {
+    text-align: center;
+    font-size: 20px;
+    color: #F63E3E;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    color: #777;
+    text-align: center;
+    a {
+      color: #ccc;
+      text-decoration: underline;
     }
   }
 </style>

@@ -21,28 +21,26 @@ class SpriteProcessor {
     this.renderSprites(this.visibleSprites(object), object.id);
 
     // Draw only the last sprite
-    if (object.numUses() > 1 && object.transitionsAway.filter(t => t.lastUseActor || t.lastUseTarget).length > 0) {
+    if (object.data.numUses > 1) {
       this.renderSprites(this.lastSprites(object), object.id + "_last");
     }
   }
 
   visibleSprites(object) {
-    const hideIndexes = object.data.useVanishIndex == -1 && object.numUses() > 1 ?
-      object.data.useAppearIndex.split(",").map(i => parseInt(i)) :
-      [];
+    const hideIndexes = object.data.useVanishIndex == -1 && object.data.numUses > 1
+      ? object.data.useAppearIndex : [];
     // Draw sprites as if they were 20 years old
     return object.sprites.filter((s,i) => !s.beyondAge(20) && !hideIndexes.includes(i))
   }
 
   lastSprites(object) {
-    if (object.data.useVanishIndex != -1) {
-      const hideIndexes = object.data.useVanishIndex.split(",").map(i => parseInt(i));
+    if (object.data.useVanishIndex != -1 && Array.isArray(object.data.useVanishIndex)) {
+      const hideIndexes = object.data.useVanishIndex.slice(0);
       hideIndexes.shift(); // still draw the first sprite
       return this.visibleSprites(object).filter((s,i) => !hideIndexes.includes(i));
     }
-    if (object.data.useAppearIndex != -1) {
-      const useIndexes = object.data.useAppearIndex.split(",").map(i => parseInt(i))
-      const indexes = useIndexes.filter((_, i) => i+1 < object.numUses());
+    if (object.data.useAppearIndex != -1 && Array.isArray(object.data.useAppearIndex)) {
+      const indexes = object.data.useAppearIndex.filter((_, i) => i+1 < object.data.numUses);
       const useSprites = object.sprites.filter((s,i) => indexes.includes(i));
       const sprites = this.visibleSprites(object);
       // Insert the use sprites after the last index
@@ -93,10 +91,27 @@ class SpriteProcessor {
   }
 
   drawSprite(sprite) {
-    this.drawSpriteImage(sprite, this.context);
+    if (sprite.additiveBlend()) {
+      this.drawSpriteWithOperation(sprite, "screen");
+    } else {
+      this.drawSpriteDirectly(sprite, this.context);
+    }
+  }
 
-    if (sprite.color.find(c => c < 1.0))
-      this.overlayColor(sprite)
+  drawSpriteWithOperation(sprite, operation) {
+    const newCanvas = new Canvas(this.canvas.width, this.canvas.height);
+    const newContext = newCanvas.getContext('2d');
+
+    this.drawSpriteDirectly(sprite, newContext);
+    this.overlayCanvas(newCanvas, this.context, operation);
+  }
+
+  drawSpriteDirectly(sprite, context) {
+    this.drawSpriteImage(sprite, context);
+
+    if (sprite.color.find(c => c < 1.0)) {
+      this.overlayColor(sprite, context)
+    }
   }
 
   drawSpriteImage(sprite, context) {
@@ -113,6 +128,7 @@ class SpriteProcessor {
     context.translate(x + context.canvas.width / 2, -y + context.canvas.height / 2);
     context.rotate(angleRads);
     if (sprite.hFlip == 1) context.scale(-1, 1);
+
     context.drawImage(
       img,
       -img.width / 2 - sprite.centerAnchorXOffset,
@@ -122,11 +138,11 @@ class SpriteProcessor {
     );
   }
 
-  overlayColor(sprite) {
+  overlayColor(sprite, targetContext) {
     const newCanvas = new Canvas(this.canvas.width, this.canvas.height);
     const newContext = newCanvas.getContext('2d');
 
-    this.drawSpriteImage(sprite, newContext)
+    this.drawSpriteImage(sprite, newContext, false)
 
     const color = sprite.color.map(c => Math.round(c*255)).join(", ");
 
@@ -135,19 +151,23 @@ class SpriteProcessor {
     newContext.fillStyle = "rgb(" + color + ")";
     newContext.fillRect(0, 0, newCanvas.width, newCanvas.height);
 
-    const previousOperation = this.context.globalCompositeOperation;
-    this.context.globalCompositeOperation = "multiply";
+    this.overlayCanvas(newCanvas, targetContext, "multiply")
+  }
 
-    this.context.setTransform(1, 0, 0, 1, 0, 0);
-    this.context.drawImage(
-      newCanvas,
+  overlayCanvas(sourceCanvas, targetContext, operation) {
+    const previousOperation = targetContext.globalCompositeOperation;
+    targetContext.globalCompositeOperation = operation;
+
+    targetContext.setTransform(1, 0, 0, 1, 0, 0);
+    targetContext.drawImage(
+      sourceCanvas,
       0,
       0,
-      newCanvas.width,
-      newCanvas.height
+      sourceCanvas.width,
+      sourceCanvas.height
     );
 
-    this.context.globalCompositeOperation = previousOperation;
+    targetContext.globalCompositeOperation = previousOperation;
   }
 
   spritesBounds(sprites) {
@@ -190,7 +210,8 @@ class SpriteProcessor {
         if (opacity > threshold) return col;
       }
     }
-    throw "Unable to find opaque pixels in image";
+    return 0;
+    // throw "Unable to find opaque pixels in image";
   }
 
   rightTrim(image, threshold) {
@@ -201,7 +222,8 @@ class SpriteProcessor {
         if (opacity > threshold) return image.width-1-col;
       }
     }
-    throw "Unable to find opaque pixels in image";
+    return 0;
+    // throw "Unable to find opaque pixels in image";
   }
 
   topTrim(image, threshold) {
@@ -212,7 +234,8 @@ class SpriteProcessor {
         if (opacity > threshold) return row;
       }
     }
-    throw "Unable to find opaque pixels in image";
+    return 0;
+    // throw "Unable to find opaque pixels in image";
   }
 
   bottomTrim(image, threshold) {
@@ -223,7 +246,8 @@ class SpriteProcessor {
         if (opacity > threshold) return image.height-1-row;
       }
     }
-    throw "Unable to find opaque pixels in image";
+    return 0;
+    // throw "Unable to find opaque pixels in image";
   }
 
   spritePoints(sprite) {
