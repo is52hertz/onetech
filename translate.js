@@ -54,7 +54,8 @@ function loadfile(filename){
 }
 
 function replaceTextInFile(filename,newstring){
-		
+	if(newstring == undefined)
+		return;
 	fs.readFile(filename, 'utf8', function(err, contents) {
 			if(contents == undefined)
 				return;
