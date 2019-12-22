@@ -75,7 +75,8 @@ function replaceTextInFile(filename,newstring){
 			}
 		}); 
 	} catch(e) {
-		console.log(e);
+		//not exists
+		console.log("Missing file:" + filename);
 	}
 }
 
