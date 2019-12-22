@@ -54,7 +54,7 @@ function loadfile(filename){
 }
 
 function replaceTextInFile(filename,newstring){
-	if(newstring == undefined)
+	if(newstring.replace(/(^s*)|(s*$)/g, "").length ==0)
 		return;
 	fs.readFile(filename, 'utf8', function(err, contents) {
 			if(contents == undefined)
