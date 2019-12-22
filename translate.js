@@ -36,17 +36,16 @@ function loadfile(filename){
 	deleteCache();
 	copyMenu(filename);
 	if (fs.existsSync(filename)) {
-		fs.readFileSync(filename, 'utf8', function(err, contents) {		
-			if(contents == undefined)
-				return;
-			contents = contents.split("\n");
-			contents.forEach(function(element) {
-				element = replaceNonASCII(element.replace(/\t/g,''));
-				//console.log('Replacing:',element.split(";")[0].replace(/\s/g, '')+'!');
-				replaceTextInFile('./objects/'+element.split(";")[0].replace(/\s/g, ''),element.split(";")[1]);
-			});
-		console.log('Translated ' + numTranslated + ' items!');
-	});
+		var contents = fs.readFileSync(filename, 'utf8');	
+		if(contents == undefined)
+			return;
+		contents = contents.split("\n");
+		contents.forEach(function(element) {
+			element = replaceNonASCII(element.replace(/\t/g,''));
+			//console.log('Replacing:',element.split(";")[0].replace(/\s/g, '')+'!');
+			replaceTextInFile('./objects/'+element.split(";")[0].replace(/\s/g, ''),element.split(";")[1]);
+			console.log('Translated ' + numTranslated + ' items!');
+		});
 	}else{
 		console.log("Missing file!")
 	}
@@ -57,21 +56,19 @@ function loadfile(filename){
 function replaceTextInFile(filename,newstring){
 	if(newstring.replace(/(^s*)|(s*$)/g, "").length ==0)
 		return;
-	fs.readFileSync(filename, 'utf8', function(err, contents) {
-			if(contents == undefined)
-				return;
-			contents = contents.split("\n");
-			contents[1] = newstring;// + "\r";
-			console.log("Translated " + filename + " with " + contents[1]);
-			contents = contents.join("\n");
-			fs.writeFile(filename, contents, 'utf8', function(err) {
-			if(err) {
-				return console.log(err);
-			}
-			numTranslated++;
-		}); 
-	});
-
+	var contents = fs.readFileSync(filename, 'utf8');
+	if(contents == undefined)
+		return;
+	contents = contents.split("\n");
+	contents[1] = newstring;// + "\r";
+	console.log("Translated " + filename + " with " + contents[1]);
+	numTranslated++;
+	contents = contents.join("\n");
+	fs.writeFile(filename, contents, 'utf8', function(err) {
+		if(err) {
+			return console.log(err);
+		}
+	}); 
 }
 
 //
