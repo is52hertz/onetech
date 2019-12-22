@@ -36,7 +36,7 @@ function loadfile(filename){
 	deleteCache();
 	copyMenu(filename);
 	if (fs.existsSync(filename)) {
-		fs.readFile(filename, 'utf8', function(err, contents) {		
+		fs.readFileSync(filename, 'utf8', function(err, contents) {		
 			if(contents == undefined)
 				return;
 			contents = contents.split("\n");
@@ -57,7 +57,7 @@ function loadfile(filename){
 function replaceTextInFile(filename,newstring){
 	if(newstring.replace(/(^s*)|(s*$)/g, "").length ==0)
 		return;
-	fs.readFile(filename, 'utf8', function(err, contents) {
+	fs.readFileSync(filename, 'utf8', function(err, contents) {
 			if(contents == undefined)
 				return;
 			contents = contents.split("\n");
