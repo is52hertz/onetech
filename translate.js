@@ -1,4 +1,5 @@
 var fs = require('fs');
+var numTranslated = 0;
 
 function deleteCache(){
 	console.log('Deleting Cache!');
@@ -41,10 +42,10 @@ function loadfile(filename){
 			contents = contents.split("\n");
 			contents.forEach(function(element) {
 				element = replaceNonASCII(element.replace(/\t/g,''));
-				console.log('Replacing:',element.split(";")[0].replace(/\s/g, '')+'!');
+				//console.log('Replacing:',element.split(";")[0].replace(/\s/g, '')+'!');
 				replaceTextInFile('./objects/'+element.split(";")[0].replace(/\s/g, ''),element.split(";")[1]);
 			});
-		
+		console.log('Translated ' + numTranslated + ' items!');
 	});
 	}else{
 		console.log("Missing file!")
@@ -61,13 +62,13 @@ function replaceTextInFile(filename,newstring){
 				return;
 			contents = contents.split("\n");
 			contents[1] = newstring;// + "\r";
-			console.log(contents[1]);
+			console.log("Translated " + filename + " with " + contents[1]);
 			contents = contents.join("\n");
 			fs.writeFile(filename, contents, 'utf8', function(err) {
 			if(err) {
 				return console.log(err);
 			}
-			
+			numTranslated++;
 		}); 
 	});
 
