@@ -2703,6 +2703,7 @@
 3096.txt;翻新的财产围栏
 3097.txt;裂缝# A 1 +noHighlight
 3098.txt; 裂缝# A 2 +noHighlight
+3099.txt; 裂缝# A 3 +noHighlight
 3100.txt; 裂缝# A 4 +noHighlight
 3101.txt; 裂缝# B 1 +noHighlight
 3102.txt; 裂缝# B 2 +noHighlight
