@@ -1,8 +1,15 @@
 # onetech 一个OHOL合成表
 
+[![Build Status](http://43.254.216.98:8891/job/OneHourOneLife/job/OneTech-Moe/badge/icon)](http://43.254.216.98:8891/job/OneHourOneLife/job/OneTech-Moe/)
+[![Build Status](http://43.254.216.98:8891/job/OneHourOneLife/job/OneTech-Origin/badge/icon)](http://43.254.216.98:8891/job/OneHourOneLife/job/OneTech-Origin/)
+
 > One Hour One Life Crafting Reference
 
 View here: https://kazetsukai.github.io/onetech
+
+http://guide.onehouronelife.cn
+
+http://moetech.onehouronelife.cn
 
 This site is built using the game data directly from [the game data repository](https://github.com/jasonrohrer/OneLifeData7).
 It shows the relationships between items, and lets you explore how things are crafted.
