@@ -58,7 +58,7 @@ function loadfile(filename){
 }
 
 function replaceTextInFile(filename,newstring){
-	if(newstring.replace(/(^s*)|(s*$)/g, "").length ==0)
+	if(newstring == undefined || newstring.replace(/(^s*)|(s*$)/g, "").length ==0)
 		return;
 	try {
 		var contents = fs.readFileSync(filename, 'utf8');
