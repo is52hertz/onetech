@@ -24,12 +24,17 @@ class ChangeLog {
       return version;
     });
     if (!releasedOnly) {
-      versions.push(new ChangeLogVersion(
+      const version = 
+      new ChangeLogVersion(
         this.git,
         this.objects,
         "unreleased",
         previousVersion
-      ));
+      );
+      versions.push(version);
+
+      console.log("unreleased commits:");
+      console.log(version.fetchCommits());
     }
     return versions;
   }
@@ -48,7 +53,7 @@ class ChangeLog {
 
   populateObjects() {
     for (let version of this.versions) {
-      if (true || version.isReleased()) {
+      if (version.isReleased()) {
         version.populateObjects();
       }
     }
