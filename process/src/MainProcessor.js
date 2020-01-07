@@ -74,9 +74,6 @@ class MainProcessor {
     console.log("Exporting biomes...");
     gameData.exportBiomes();
 
-	console.log("Generating sitemap...");
-    gameData.generateSitemap();
-
     if (false && version) {
       console.log("Generating sitemap...");
       gameData.generateSitemap();

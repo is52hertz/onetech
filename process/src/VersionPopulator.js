@@ -27,14 +27,21 @@ class VersionPopulator {
   }
 
   versionFromTag(tag) {
-    const version = tag.replace("OneLife_v", "");
-    if (version == "Start") return 0;
+    const version = tag.replace("MoeLife_v", "");
+    if(version.startsWith("OneLife"))
+      return NaN;
     return parseInt(version);
   }
 
+  padding(num, length) {
+        for(var len = (num + "").length; len < length; len = num.length) {
+            num = "0" + num;            
+        }
+        return num;
+  }
+
   tagFromVersion(version) {
-    if (version == 0) return "OneLife_vStart";
-    return "OneLife_v" + version;
+    return "MoeLife_v" + this.padding(this.id, 3);
   }
 
   populateVersion(current, previous) {
