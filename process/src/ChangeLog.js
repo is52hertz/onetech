@@ -21,8 +21,9 @@ class ChangeLog {
       );
       previousVersion = version;
       return version;
+      console.log("Find version: " + id);
     });
-    if (false && !releasedOnly) {
+    if (!releasedOnly) {
       versions.push(new ChangeLogVersion(
         this.git,
         this.objects,
