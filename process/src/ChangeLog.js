@@ -48,7 +48,7 @@ class ChangeLog {
 
   populateObjects() {
     for (let version of this.versions) {
-      if (!releasedOnly || version.isReleased()) {
+      if (true || version.isReleased()) {
         version.populateObjects();
       }
     }
