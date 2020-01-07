@@ -2,7 +2,7 @@
   <div class="changeLogVersion">
     <h2>{{name}}</h2>
     <div v-if="!version.data" class="loading">
-      Loading...
+      加载中...
     </div>
     <div v-else-if="isEmptyUnreleased">
       <div class="empty">Currently no unreleased content</div>
@@ -36,10 +36,10 @@ export default {
       if (!this.version.data.date) return;
       const date = new Date(this.version.data.date);
       const months = [
-        "January", "February", "March",
-        "April", "May", "June", "July",
-        "August", "September", "October",
-        "November", "December"
+        "一月", "二月", "三月",
+        "四月", "五月", "六月", "七月",
+        "八月", "九月", "十月",
+        "十一月", "十二月"
       ];
       var month = date.getMonth();
       var day = date.getDate();
@@ -48,9 +48,9 @@ export default {
     },
     name() {
       if (this.id === "unreleased") {
-        return "Unreleased";
+        return "未发布";
       }
-      return "Version " + this.id;
+      return "版本 " + this.id;
     },
     isEmptyUnreleased() {
       return this.id === "unreleased" && this.version.data.commits.length === 0;

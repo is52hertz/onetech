@@ -49,16 +49,6 @@
         <li>
           对象编号: {{object.id}}
         </li>
-        <li v-if="object.data.version">
-          添加于版本
-          v{{object.data.version}}
-        </li>
-        <li v-else-if="modName">
-          由 {{modName}} 添加
-        </li>
-        <li v-else>
-          <router-link to="/versions/unreleased">未发布</router-link>
-        </li>
       </ul>
     </div>
     <div class="transitionsPanels" v-if="object.data">

@@ -10,7 +10,7 @@
     </div>
 
     <div v-if="!collapsed && commit.removedObjectIDs" class="objectsList">
-      <h3>Removed Objects</h3>
+      <h3>移除物体</h3>
       <div class="objects">
         <div v-for="object in removedObjects" class="objectWrapper">
           <div class="object">
@@ -20,12 +20,12 @@
         </div>
       </div>
       <div v-if="commit.removedObjectIDs.length > objectLimit" class="showMore">
-        <span class="link" @click="showMoreObjects">Show more...</span>
+        <span class="link" @click="showMoreObjects">显示更多...</span>
       </div>
     </div>
 
     <div v-if="!collapsed && commit.addedObjectIDs" class="objectsList">
-      <h3>Added Objects</h3>
+      <h3>新增物体</h3>
       <div class="objects">
         <div v-for="object in addedObjects" v-if="object" class="objectWrapper">
           <router-link class="object"
@@ -38,12 +38,12 @@
         </div>
       </div>
       <div v-if="commit.addedObjectIDs.length > objectLimit" class="showMore">
-        <span class="link" @click="showMoreObjects">Show more...</span>
+        <span class="link" @click="showMoreObjects">显示更多...</span>
       </div>
     </div>
 
     <div v-if="!collapsed && commit.removedTransitions">
-      <h3>Removed Transitions</h3>
+      <h3>移除配方</h3>
       <div class="transitions">
         <div v-for="(transition, index) in removedTransitions"
             class="transition"
@@ -53,12 +53,12 @@
         <div v-if="commit.removedTransitions.length > 1" class="transitionSpacer"></div>
       </div>
       <div v-if="commit.removedTransitions.length > transitionLimit" class="showMore">
-        <span class="link" @click="showMoreTransitions">Show more...</span>
+        <span class="link" @click="showMoreTransitions">显示更多...</span>
       </div>
     </div>
 
     <div v-if="!collapsed && commit.addedTransitions">
-      <h3>Added Transitions</h3>
+      <h3>新增配方</h3>
       <div class="transitions">
         <div v-for="(transition, index) in addedTransitions"
             class="transition"
@@ -68,12 +68,12 @@
         <div v-if="commit.addedTransitions.length > 1" class="transitionSpacer"></div>
       </div>
       <div v-if="commit.addedTransitions.length > transitionLimit" class="showMore">
-        <span class="link" @click="showMoreTransitions">Show more...</span>
+        <span class="link" @click="showMoreTransitions">显示更多...</span>
       </div>
     </div>
 
     <div v-if="!collapsed && commit.objectChanges" class="objectChanges">
-      <h3>Changed Objects</h3>
+      <h3>修改物体</h3>
       <div class="objects">
         <div v-for="change in objectChanges"
             class="changedObject"
@@ -82,7 +82,7 @@
         </div>
       </div>
       <div v-if="commit.objectChanges.length > objectChangeLimit" class="showMore">
-        <span class="link" @click="showMoreObjectChanges">Show more...</span>
+        <span class="link" @click="showMoreObjectChanges">显示更多...</span>
       </div>
     </div>
   </div>
@@ -144,10 +144,10 @@ export default {
     date() {
       const date = new Date(this.commit.date);
       const months = [
-        "January", "February", "March",
-        "April", "May", "June", "July",
-        "August", "September", "October",
-        "November", "December"
+        "一月", "二月", "三月",
+        "四月", "五月", "六月", "七月",
+        "八月", "九月", "十月",
+        "十一月", "十二月"
       ];
       var month = date.getMonth();
       var day = date.getDate();

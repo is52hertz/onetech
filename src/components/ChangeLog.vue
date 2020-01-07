@@ -59,8 +59,8 @@ export default {
   },
   metaInfo() {
     if (this.singleVersion)
-      return {title: `Version ${this.singleVersion}`};
-    return {title: "Change Log"};
+      return {title: `版本 ${this.singleVersion}`};
+    return {title: "更新日志"};
   }
 }
 </script>
