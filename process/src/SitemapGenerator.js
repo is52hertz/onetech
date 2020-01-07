@@ -11,7 +11,7 @@ class SitemapGenerator {
   }
 
   generate(objects, biomes) {
-    const sitemap = sm.createSitemap({hostname: 'http://guide.onehouronelife.cn'});
+    const sitemap = sm.createSitemap({hostname: 'http://moetech.onehouronelife.cn'});
 
     sitemap.add({url: "/"});
 

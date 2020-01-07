@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <h1>
-      <router-link to="/">一小时人生合成指南</router-link>
+      <router-link to="/">MoeLife合成指南</router-link>
     </h1>
 	<div class="subtitle">
-		<span><a href="http://www.onehouronelife.cn">中文维基</a></span>
-		<span><a href="https://edge.onetech.info/versions">更新日志</a></span>
+		<span><a href="http://www.onehouronelife.cn">论坛</a></span>
+		<span><a href="/versions">更新日志</a></span>
 	</div>
 
     <h2 v-if="loading">加载中...</h2>
@@ -93,14 +93,14 @@ export default {
       this.$router.replace("/" + path.join("/"));
     },
     unreleasedContentUrl() {
-      return "http://guide.onehouronelife.cn/" + window.location.pathname;
+      return "http://moetech.onehouronelife.cn/" + window.location.pathname;
     },
     releasedContentUrl() {
-      return "http://guide.onehouronelife.cn/" + window.location.pathname;
+      return "http://moetech.onehouronelife.cn/" + window.location.pathname;
     }
   },
   metaInfo: {
-    title: "一小时人生合成指南",
+    title: "MoeLife合成指南",
     titleTemplate: '%s | onetech'
   },
   routes: [
