@@ -18,9 +18,8 @@ class ChangeLogVersion {
   }
 
   tag() {
-    if (this.id == 0) return "MoeLife_v009";
     if (this.isUnreleased()) return "master";
-    return "MoeLife_v" + padding(this.id, 3);
+    return "MoeLife_v" + this.padding(this.id, 3);
   }
 
   populateObjects() {

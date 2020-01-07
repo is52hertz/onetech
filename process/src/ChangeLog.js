@@ -42,8 +42,6 @@ class ChangeLog {
     if(version.startsWith("OneLife"))
       return null;
     var vn = parseInt(version);
-    if(vn == 9)
-      return 0;
     return vn;
   }
 
