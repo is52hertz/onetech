@@ -24,7 +24,9 @@ class ChangeLogVersion {
 
   populateObjects() {
     const differences = this.diff();
+    console.log("Diff for: " + this.id);
     for (let difference of differences) {
+      console.log(difference);
       if (difference[0] == "A")
         this.populateObjectAtPath(difference[1]);
       else if (difference[0].startsWith("R"))
