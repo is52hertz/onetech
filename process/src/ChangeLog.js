@@ -23,7 +23,7 @@ class ChangeLog {
       console.log("Found version: " + id);
       return version;
     });
-    if (true) {
+    if (!releasedOnly) {
       versions.push(new ChangeLogVersion(
         this.git,
         this.objects,
@@ -48,7 +48,7 @@ class ChangeLog {
 
   populateObjects() {
     for (let version of this.versions) {
-      if (version.isReleased()) {
+      if (!releasedOnly || version.isReleased()) {
         version.populateObjects();
       }
     }
