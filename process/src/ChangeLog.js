@@ -22,7 +22,7 @@ class ChangeLog {
       previousVersion = version;
       return version;
     });
-    if (!releasedOnly) {
+    if (false && !releasedOnly) {
       versions.push(new ChangeLogVersion(
         this.git,
         this.objects,
@@ -38,8 +38,9 @@ class ChangeLog {
   }
 
   versionNumberFromTag(tag) {
-    const version = tag.replace("OneLife_v", "");
-    if (version == "Start") return 0;
+    if(!version.startsWith("MoeLife_v"))
+      return 0;
+    const version = tag.replace("MoeLife_v", "");
     return parseInt(version);
   }
 
