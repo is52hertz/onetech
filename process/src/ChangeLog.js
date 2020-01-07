@@ -40,8 +40,11 @@ class ChangeLog {
   versionNumberFromTag(tag) {
     const version = tag.replace("MoeLife_v", "");
     if(version.startsWith("OneLife"))
+      return null;
+    var vn = parseInt(version);
+    if(vn == 9)
       return 0;
-    return parseInt(version);
+    return vn;
   }
 
   populateObjects() {

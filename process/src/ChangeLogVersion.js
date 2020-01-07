@@ -10,10 +10,17 @@ class ChangeLogVersion {
     this.previous = previous;
   }
 
+  padding(num, length) {
+        for(var len = (num + "").length; len < length; len = num.length) {
+            num = "0" + num;            
+        }
+        return num;
+  }
+
   tag() {
-    if (this.id == 0) return "OneLife_vStart";
+    if (this.id == 0) return "MoeLife_v009";
     if (this.isUnreleased()) return "master";
-    return "OneLife_v" + this.id;
+    return "MoeLife_v" + padding(this.id, 3);
   }
 
   populateObjects() {
