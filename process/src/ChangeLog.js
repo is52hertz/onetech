@@ -23,7 +23,7 @@ class ChangeLog {
       console.log("Found version: " + id);
       return version;
     });
-    if (!releasedOnly) {
+    if (true) {
       versions.push(new ChangeLogVersion(
         this.git,
         this.objects,
@@ -42,7 +42,7 @@ class ChangeLog {
     const version = tag.replace("MoeLife_v", "");
     if(version.includes("OneLife"))
       return NaN;
-    console.log("tag: " + tag);
+    //console.log("tag: " + tag);
     return parseInt(version);
   }
 
