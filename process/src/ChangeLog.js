@@ -33,8 +33,8 @@ class ChangeLog {
       );
       versions.push(version);
 
-      console.log("unreleased commits:");
-      console.log(version.fetchCommits());
+      //console.log("unreleased commits:");
+      //console.log(version.fetchCommits());
     }
     return versions;
   }

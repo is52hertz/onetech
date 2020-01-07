@@ -35,7 +35,7 @@ class Git {
   }
 
   log(from, to) {
-    const lines = this.runLines("log", "--format=%H %ad %s", "--date=iso", `${from}..${to}`);
+    const lines = this.runLines("log", "--format=%H %ad %s", "--date=short", `${from}..${to}`);
     return lines.map(line => {
       const parts = line.match(/^(.+?) (.+?) (.+?)$/).slice(1);
       return {

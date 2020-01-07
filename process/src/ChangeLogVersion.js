@@ -18,7 +18,7 @@ class ChangeLogVersion {
   }
 
   tag() {
-    if (this.isUnreleased()) return "master";
+    if (this.isUnreleased()) return "HEAD";
     return "MoeLife_v" + this.padding(this.id, 3);
   }
 
