@@ -20,8 +20,8 @@ class ChangeLog {
         previousVersion
       );
       previousVersion = version;
+      console.log("Found version: " + id);
       return version;
-      console.log("Find version: " + id);
     });
     if (!releasedOnly) {
       versions.push(new ChangeLogVersion(
@@ -42,6 +42,7 @@ class ChangeLog {
     const version = tag.replace("MoeLife_v", "");
     if(version.includes("OneLife"))
       return NaN;
+    console.log("tag: " + tag);
     return parseInt(version);
   }
 
