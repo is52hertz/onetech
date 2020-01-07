@@ -38,9 +38,9 @@ class ChangeLog {
   }
 
   versionNumberFromTag(tag) {
-    if(!version.startsWith("MoeLife_v"))
-      return 0;
     const version = tag.replace("MoeLife_v", "");
+    if(version.startsWith("OneLife"))
+      return 0;
     return parseInt(version);
   }
 
