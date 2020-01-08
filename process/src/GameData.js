@@ -188,7 +188,7 @@ class GameData {
         const id = filename.split('.')[0];
         const inPath = dir + "/" + filename;
         const outPath = this.staticDir + "/sprites/sprite_" + id + ".png";
-        if (!fs.existsSync(outPath))
+        if (true || !fs.existsSync(outPath))
           spawnSync("convert", [inPath, outPath]);
       }
     }

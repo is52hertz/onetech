@@ -52,7 +52,7 @@ class SpriteProcessor {
   }
 
   renderSprites(sprites, name) {
-    if (fs.existsSync(`${this.pngDir}/obj_${name}.png`))
+    if (false && fs.existsSync(`${this.pngDir}/obj_${name}.png`))
       return;
 
     this.context.setTransform(1, 0, 0, 1, 0, 0);
