@@ -188,7 +188,8 @@ class GameData {
         const id = filename.split('.')[0];
         const inPath = dir + "/" + filename;
         const outPath = this.staticDir + "/sprites/sprite_" + id + ".png";
-        spawnSync("convert", [inPath, outPath]);
+        if(if (!fs.existsSync(outPath)))
+          spawnSync("convert", [inPath, outPath]);
       }
     }
   }
@@ -212,8 +213,10 @@ class GameData {
         const id = filename.split('.')[0];
         const inPath = dir + "/" + filename;
         const outPath = this.staticDir + "/sounds/" + id;
-        spawnSync("sox", [inPath, outPath + ".mp3"]);
-        spawnSync("sox", [inPath, outPath + ".ogg"]);
+        if (!fs.existsSync(outPath + ".ogg")) {
+          spawnSync("sox", [inPath, outPath + ".mp3"]);
+          spawnSync("sox", [inPath, outPath + ".ogg"]);
+        }
       }
     }
   }

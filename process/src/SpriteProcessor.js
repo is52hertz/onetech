@@ -52,6 +52,9 @@ class SpriteProcessor {
   }
 
   renderSprites(sprites, name) {
+    if (fs.existsSync(`${this.pngDir}/obj_${name}.png`))
+      return;
+
     this.context.setTransform(1, 0, 0, 1, 0, 0);
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
