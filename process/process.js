@@ -1,5 +1,5 @@
 if (!process.env.ONETECH_FOOD_BONUS) {
-  process.env.ONETECH_FOOD_BONUS = 1;
+  process.env.ONETECH_FOOD_BONUS = 2;
 }
 
 const MainProcessor = require('./src/MainProcessor');
