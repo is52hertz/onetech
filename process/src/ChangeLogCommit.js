@@ -25,6 +25,8 @@ class ChangeLogCommit {
       return false;
     if (this.message.startsWith("Merge branch"))
       return false;
+    if (this.message.startsWith("Merge remote"))
+      return false;
     return true
   }
 
