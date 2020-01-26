@@ -268,7 +268,7 @@ class GameObject {
   }
 
   canFilter() {
-    return this.depth.craftable && !this.isGlobalTrigger();
+    return !this.isGlobalTrigger();
   }
 
   sounds() {
