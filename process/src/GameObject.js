@@ -229,6 +229,10 @@ class GameObject {
     return this.data.mapChance > 0;
   }
 
+  isCharacter() {
+    return this.data.person > 0;
+  }
+
   isClothing() {
     return this.data.clothing != "n" && (this.data.rValue > 0 || this.data.foodValue == '0' && this.data.containable == '1');
   }

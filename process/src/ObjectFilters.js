@@ -56,14 +56,23 @@ const Natural = {
   }
 }
 
+const Character = {
+  key: "character",
+  name: "角色",
+  filter(objects) {
+    return objects.filter(o => o.isCharacter());
+  }
+}
+
 const ObjectFilters = {
   filters: [
     Clothing,
     Food,
     Tools,
-    Containers,
+    //Containers,
     HeatSources,
     Natural,
+	Character,
   ],
   jsonData(objects) {
     objects = objects.filter(o => o.canFilter());
