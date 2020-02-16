@@ -8,8 +8,8 @@ const Clothing = {
   }
 }
 
-const Clothing1 = {
-  key: "clothing1",
+const CostClothing = {
+  key: "costclothing",
   name: "氪金衣物",
   filter(objects) {
     return objects.filter(o => o.isClothing() && !o.canCraft());
@@ -75,7 +75,7 @@ const Character = {
 const ObjectFilters = {
   filters: [
     Clothing,
-    Clothing1
+    CostClothing,
     Food,
     Tools,
     Containers,
