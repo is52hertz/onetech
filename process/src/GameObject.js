@@ -272,7 +272,7 @@ class GameObject {
   }
 
   canCraft() {
-    return this.depth.craftable();
+    return this.craftable();
   }
 
   sounds() {
