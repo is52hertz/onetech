@@ -72,6 +72,14 @@ const Character = {
   }
 }
 
+const Uncraftable = {
+  key: "uncraftable",
+  name: "不可合成",
+  filter(objects) {
+    return objects.filter(o => !o.canCraft() && !o.isClothing());
+  }
+}
+
 const ObjectFilters = {
   filters: [
     Clothing,
@@ -81,7 +89,8 @@ const ObjectFilters = {
     Containers,
     HeatSources,
     Natural,
-	Character,
+	  Character,
+    Uncraftable,
   ],
   jsonData(objects) {
     objects = objects.filter(o => o.canFilter());
