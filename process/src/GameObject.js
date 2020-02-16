@@ -271,6 +271,10 @@ class GameObject {
     return !this.isGlobalTrigger();
   }
 
+  canCraft() {
+    return this.depth.craftable();
+  }
+
   sounds() {
     if (!this.data.sounds) return [];
     const sounds = this.data.sounds.map(sound => sound.split(":")[0]);

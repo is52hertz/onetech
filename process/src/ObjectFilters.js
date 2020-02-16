@@ -2,9 +2,17 @@
 
 const Clothing = {
   key: "clothing",
-  name: "衣物",
+  name: "可合成衣物",
   filter(objects) {
-    return objects.filter(o => o.isClothing());
+    return objects.filter(o => o.isClothing() && o.canCraft());
+  }
+}
+
+const Clothing1 = {
+  key: "clothing1",
+  name: "氪金衣物",
+  filter(objects) {
+    return objects.filter(o => o.isClothing() && !o.canCraft());
   }
 }
 
@@ -67,10 +75,11 @@ const Character = {
 const ObjectFilters = {
   filters: [
     Clothing,
+    Clothing1
     Food,
     Tools,
     Containers,
-    //HeatSources,
+    HeatSources,
     Natural,
 	Character,
   ],
