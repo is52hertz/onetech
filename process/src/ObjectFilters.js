@@ -76,7 +76,7 @@ const Uncraftable = {
   key: "uncraftable",
   name: "不可合成",
   filter(objects) {
-    return objects.filter(o => !o.canCraft() && !o.isClothing());
+    return objects.filter(o => !o.canCraft() && !o.isClothing() &&!o.isCharacter());
   }
 }
 
