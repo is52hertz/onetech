@@ -76,7 +76,7 @@ const CharacterNS = {
   key: "characterns",
   name: "氪金角色",
   filter(objects) {
-    return objects.filter(o => o.isCharacter() && o.isCharacterNospawn());
+    return objects.filter(o => {o.isCharacter() && o.isCharacterNospawn()});
   }
 }
 
