@@ -234,7 +234,7 @@ class GameObject {
   }
 
   isCharacterNospawn() {
-    return this.data.personNoSpawn > 0;
+    return this.data.noSpawn > 0;
   }
 
   isClothing() {
