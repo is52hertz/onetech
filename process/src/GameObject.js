@@ -233,6 +233,10 @@ class GameObject {
     return this.data.person > 0;
   }
 
+  isCharacterNospawn() {
+    return this.data.personNoSpawn > 0;
+  }
+
   isClothing() {
     return this.data.clothing != "n" && (this.data.rValue > 0 || this.data.foodValue == '0' && this.data.containable == '1');
   }

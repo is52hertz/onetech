@@ -66,9 +66,17 @@ const Natural = {
 
 const Character = {
   key: "character",
-  name: "角色",
+  name: "可选择角色",
   filter(objects) {
-    return objects.filter(o => o.isCharacter());
+    return objects.filter(o => o.isCharacter() && !o.isCharacterNospawn());
+  }
+}
+
+const CharacterNS = {
+  key: "characterns",
+  name: "氪金角色",
+  filter(objects) {
+    return objects.filter(o => o.isCharacter() && o.isCharacterNospawn());
   }
 }
 
@@ -87,9 +95,10 @@ const ObjectFilters = {
     Food,
     Tools,
     Containers,
-    HeatSources,
+    //HeatSources,
     Natural,
-	  Character,
+	Character,
+	CharacterNS,
     Uncraftable,
   ],
   jsonData(objects) {
