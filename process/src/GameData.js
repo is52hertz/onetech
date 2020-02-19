@@ -213,7 +213,7 @@ class GameData {
         const id = filename.split('.')[0];
         const inPath = dir + "/" + filename;
         const outPath = this.staticDir + "/sounds/" + id;
-        if (true || !fs.existsSync(outPath + ".ogg")) {
+        if (!fs.existsSync(outPath + ".ogg")) {
           spawnSync("sox", [inPath, outPath + ".mp3"]);
           spawnSync("sox", [inPath, outPath + ".ogg"]);
         }
