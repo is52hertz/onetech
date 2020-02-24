@@ -2,7 +2,7 @@
 
 const Clothing = {
   key: "clothing",
-  name: "可合成衣物",
+  name: "合成服装",
   filter(objects) {
     return objects.filter(o => o.isClothing() && o.canCraft());
   }
@@ -10,7 +10,7 @@ const Clothing = {
 
 const CostClothing = {
   key: "costclothing",
-  name: "氪金衣物",
+  name: "赞助服装",
   filter(objects) {
     return objects.filter(o => o.isClothing() && !o.canCraft());
   }
@@ -66,7 +66,7 @@ const Natural = {
 
 const Character = {
   key: "character",
-  name: "可选择角色",
+  name: "可选角色",
   filter(objects) {
     return objects.filter(o => o.isCharacter() && !o.isCharacterNospawn());
   }
@@ -74,7 +74,7 @@ const Character = {
 
 const CharacterNS = {
   key: "characterns",
-  name: "氪金角色",
+  name: "定制角色",
   filter(objects) {
     return objects.filter(o => o.isCharacter() && o.isCharacterNospawn());
   }
