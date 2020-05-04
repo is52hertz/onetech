@@ -49,6 +49,21 @@ yum install ImageMagick
 sudo yum install cairo cairo-devel cairomm-devel libjpeg-turbo-devel pango pango-devel pangomm pangomm-devel giflib-devel
 ```
 
+If your project has items more than 4096 You need to change the limit your system user can handle
+Open file: `/etc/security/limits.conf`
+
+
+Paste following towards end:
+``` bash
+*         hard    nofile      500000
+*         soft    nofile      500000
+root      hard    nofile      500000
+root      soft    nofile      500000
+```
+
+500000 is fair number. I am not sure what is max limit but 999999 (Six-9) worked for me once as far as I remember.
+Once you save file, you may need to logout and login again.
+
 and then:
 
 ``` bash
