@@ -42,6 +42,18 @@ For detailed explanation on how things work, consult the [docs for vue-loader](h
 
 The script is under the folder `process`. It will pull the latest data from the game data repository (if provided `download` as a command line argument), and then generate JSON files for the objects. It will also composite the sprites and create PNGs for each object in the game.
 
+
+Need nodejs recommended version is 10
+
+``` bash
+curl -sL https://rpm.nodesource.com/setup_10.x | bash -
+sudo yum clean all && sudo yum makecache fast
+sudo yum install -y gcc-c++ make
+sudo yum install -y nodejs
+node -v
+```
+
+
 To get it running, you will need to install [ImageMagick](https://www.imagemagick.org/script/index.php) and [Canvas dependencies](https://github.com/Automattic/node-canvas/blob/v1.x/Readme.md#installation)
 
 ``` bash
@@ -50,6 +62,7 @@ sudo yum install cairo cairo-devel cairomm-devel libjpeg-turbo-devel pango pango
 ```
 
 If your project has items more than 4096 You need to change the limit your system user can handle
+
 Open file: `/etc/security/limits.conf`
 
 
