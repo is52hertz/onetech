@@ -1,10 +1,10 @@
-# onetech 一个OHOL合成表
+# onetech OHOL Crafting Reference
 
 > One Hour One Life Crafting Reference
 
 View here: https://kazetsukai.github.io/onetech
 
-http://guide.onehouronelife.cn
+http://onetech.onehouronelife.cn
 
 http://moetech.onehouronelife.cn
 
@@ -15,14 +15,14 @@ Unlike the wiki, which contains "wisdom" about the game, this site contains only
 This is a reference. For a better guide, go to the [game wiki](https://onehouronelife.gamepedia.com/One_Hour_One_Life_Wiki).
 
 
-## 构建说明
+## Build description
 
 The project is split into two parts:
 - A node script that processes the latest data from the game data repository
 - The site itself, built in VueJS
 
 
-### 构建过程
+### Build process
 
 ``` bash
 # install dependencies
@@ -38,7 +38,7 @@ npm run build
 For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
 
-### 处理脚本
+### Build script
 
 The script is under the folder `process`. It will pull the latest data from the game data repository (if provided `download` as a command line argument), and then generate JSON files for the objects. It will also composite the sprites and create PNGs for each object in the game.
 
@@ -106,11 +106,10 @@ export ONETECH_PROCESS_GIT_URL="https://github.com/custom-ohol-data"
 export ONETECH_PROCESS_GIT_PATH="/path/to/custom-ohol-data"
 ```
 
-### 其他脚本
-根目录的sh后缀的文件
-buildSite.sh 构建网站本体
-buildData.sh 构建最新数据
-reBuildData.sh 全自动更新数据
-buildSprite.sh 构建图像
-pullData.sh 拉取最新数据
-copyData.sh 复制数据至网站目录
+### Other scripts
+buildSite.sh Build stie
+buildData.sh Build newest data
+reBuildData.sh Automaticlly update data
+buildSprite.sh build images
+pullData.sh fetch latest data
+copyData.sh copy result to webserver
