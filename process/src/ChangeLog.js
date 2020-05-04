@@ -67,6 +67,7 @@ class ChangeLog {
     var num = parseInt(version);
     if(num <= this.maxVersionNumber - 3)
       return NaN;
+    return num;
   }
 
   populateObjects() {
