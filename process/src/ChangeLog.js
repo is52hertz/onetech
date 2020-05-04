@@ -11,6 +11,8 @@ class ChangeLog {
   }
 
   fetchVersions(releasedOnly) {
+    this.fetchMaxVersionNumber();
+
     let previousVersion = null;
     const versions = this.fetchVersionNumbers().map(id => {
       const version = new ChangeLogVersion(
@@ -39,6 +41,20 @@ class ChangeLog {
     return versions;
   }
 
+  fetchMaxVersionNumber() {
+    this.maxVersionNumber = 0;
+
+    let maxVersionNumber = 0;
+    this.git.tags().every(t => {
+      var num = this.versionNumberFromTag(t);
+      if(num > maxVersionNumber)
+        maxVersionNumber = num;
+      return true;
+    });
+
+    this.maxVersionNumber = maxVersionNumber;
+  }
+
   fetchVersionNumbers() {
     return this.git.tags().map(t => this.versionNumberFromTag(t)).filter(t => !isNaN(t)).sort((a,b) => a - b);
   }
@@ -48,7 +64,9 @@ class ChangeLog {
     if(version.includes("OneLife"))
       return NaN;
     //console.log("tag: " + tag);
-    return parseInt(version);
+    var num = parseInt(version);
+    if(num <= this.maxVersionNumber - 3)
+      return NaN;
   }
 
   populateObjects() {
