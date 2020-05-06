@@ -14,11 +14,10 @@ class GameObject {
     this.biomes = [];
     this.depth = new Depth({});
     this.parseData(dataText);
-
-    this.name = this.data.name;
     if (!this.data.id)
       return;
     this.id = this.data.id.toString();
+    this.name = this.data.name;
   }
 
   parseData(dataText) {
