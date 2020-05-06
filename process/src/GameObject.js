@@ -267,7 +267,7 @@ class GameObject {
   }
 
   isGlobalTrigger() {
-    return this.name.startsWith(">");
+    return this.name && this.name.startsWith(">");
   }
 
   transmitterName() {
