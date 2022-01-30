@@ -1,6 +1,6 @@
 "use strict";
 
-const { spawnSync } = require('child_process');
+const {spawnSync} = require('child_process');
 
 class Git {
   constructor(dir) {
@@ -37,10 +37,15 @@ class Git {
   log(from, to) {
     const lines = this.runLines("log", "--format=%H %ad %s", "--date=short", `${from}..${to}`);
     return lines.map(line => {
-      const parts = line.match(/^(.+?) (.+?) (.+?)$/).slice(1);
-      console.log("测试：parts[0]="+parts[0]);
-      console.log("测试：parts[1]="+parts[1]);
-      console.log("测试：parts[2]="+parts[2]);
+
+      //const parts = line.match(/^(.+?) (.+?) (.+?)$/).slice(1);
+      const lineStrings = line.match(/^(.+?) (.+?) (.+?)$/);
+      const parts = lineStrings != null ? lineStrings.slice(1) : ["", "", ""];
+
+      console.log("测试：parts[0]=" + parts[0]);
+      console.log("测试：parts[1]=" + parts[1]);
+      console.log("测试：parts[2]=" + parts[2]);
+
       return {
         sha: parts[0],
         date: new Date(parts[1]),
