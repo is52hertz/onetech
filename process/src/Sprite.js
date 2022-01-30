@@ -6,8 +6,9 @@ class Sprite {
   constructor(lines, index, object) {
     this.index = index;
     this.object = object;
+    console.log("当前的物体是"+this.object);
     this.id = lines[0].split('=')[1];
-    const position = lines[1].split('=')[1].split(',');
+    const position = (lines[1]||"").split('=')[1].split(',');
     this.x = position[0];
     this.y = position[1];
     this.rotation = lines[2].split('=')[1];
