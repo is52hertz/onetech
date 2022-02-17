@@ -6,11 +6,14 @@ class Sprite {
   constructor(lines, index, object) {
     this.index = index;
     this.object = object;
-    console.log("当前的物体是"+this.object);
     this.id = lines[0].split('=')[1];
-    const position = (lines[1]||"").split('=')[1].split(',');
-    this.x = position[0];
-    this.y = position[1];
+
+    //const position = (lines[1]||"").split('=')[1].split(',');
+
+    // this.x = position[0];
+    // this.y = position[1];
+    this.x = 0;
+    this.y = 0;
     this.rotation = lines[2].split('=')[1];
     this.hFlip = lines[3].split('=')[1];
     this.color = lines[4].split('=')[1].split(',');
