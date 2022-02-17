@@ -7,7 +7,7 @@ class Sprite {
     this.index = index;
     this.object = object;
     this.id = lines[0].split('=')[1];
-
+    console.log("当前图元是"+this.id);
     //const position = (lines[1]||"").split('=')[1].split(',');
 
     // this.x = position[0];
