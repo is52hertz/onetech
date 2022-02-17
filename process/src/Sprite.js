@@ -8,10 +8,10 @@ class Sprite {
     this.object = object;
     this.id = lines[0].split('=')[1];
     console.log("当前图元是"+this.id);
-    //const position = (lines[1]||"").split('=')[1].split(',');
+    const position = (lines[1]||"").split('=')[1].split(',');
 
-    // this.x = position[0];
-    // this.y = position[1];
+    this.x = position[0];
+    this.y = position[1];
     this.x = 0;
     this.y = 0;
     this.rotation = lines[2].split('=')[1];
