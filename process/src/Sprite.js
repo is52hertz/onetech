@@ -24,6 +24,7 @@ class Sprite {
     this.x = 0;
     this.y = 0;
     if(lines[1]!=null && (lines[1]||"").split('=')[1]!=null){
+      let position;
       this.x = position[0];
       this.y = position[1];
     }
