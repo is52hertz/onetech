@@ -22,7 +22,7 @@ class Sprite {
     // this.color = lines[4].split('=')[1].split(',');
     // this.ageRange = lines[5].split('=')[1].split(',').map(f => parseFloat(f));
     this.x = 0;
-    // this.y = 0;
+    this.y = 0;
     // if(lines[1]!=null && (lines[1]||"").split('=')[1]!=null){
     //   let position;
     //   this.x = position[0];
@@ -31,8 +31,8 @@ class Sprite {
     this.rotation = lines[2].split('=')[1];
     this.hFlip = lines[3].split('=')[1];
     this.color = lines[4].split('=')[1].split(',');
-    this.ageRange[0]=-1;
-    this.ageRange[1]=-1;
+    // this.ageRange[0]=-1;
+    // this.ageRange[1]=-1;
     // if(lines[5]!=null && lines[5].split('=')[1]!=null){
     //   this.ageRange = lines[5].split('=')[1].split(',').map(f => parseFloat(f));
     // }
