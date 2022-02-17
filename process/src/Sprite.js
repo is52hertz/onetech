@@ -47,7 +47,8 @@ class Sprite {
   }
 
   beyondAge(age) {
-    return (this.ageRange[0] > -1 || this.ageRange[1] > -1) && (this.ageRange[0] > age || this.ageRange[1] < age);
+    return false;
+    //return (this.ageRange[0] > -1 || this.ageRange[1] > -1) && (this.ageRange[0] > age || this.ageRange[1] < age);
   }
 
   additiveBlend() {
