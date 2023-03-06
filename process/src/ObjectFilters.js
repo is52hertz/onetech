@@ -8,13 +8,13 @@ const Clothing = {
   }
 }
 
-const CostClothing = {
-  key: "costclothing",
-  name: "赞助服装",
-  filter(objects) {
-    return objects.filter(o => o.isClothing() && !o.canCraft());
-  }
-}
+// const CostClothing = {
+//   key: "costclothing",
+//   name: "赞助服装",
+//   filter(objects) {
+//     return objects.filter(o => o.isClothing() && !o.canCraft());
+//   }
+// }
 
 const Food = {
   key: "food",
@@ -72,34 +72,34 @@ const Character = {
   }
 }
 
-const CharacterNS = {
-  key: "characterns",
-  name: "定制角色",
-  filter(objects) {
-    return objects.filter(o => o.isCharacter() && o.isCharacterNospawn());
-  }
-}
+// const CharacterNS = {
+//   key: "characterns",
+//   name: "定制角色",
+//   filter(objects) {
+//     return objects.filter(o => o.isCharacter() && o.isCharacterNospawn());
+//   }
+// }
 
-const Uncraftable = {
-  key: "uncraftable",
-  name: "不可合成",
-  filter(objects) {
-    return objects.filter(o => !o.canCraft() && !o.isClothing() &&!o.isCharacter());
-  }
-}
+// const Uncraftable = {
+//   key: "uncraftable",
+//   name: "不可合成",
+//   filter(objects) {
+//     return objects.filter(o => !o.canCraft() && !o.isClothing() &&!o.isCharacter());
+//   }
+// }
 
 const ObjectFilters = {
   filters: [
     Clothing,
-    CostClothing,
+    // CostClothing,
     Food,
     Tools,
     Containers,
     //HeatSources,
     Natural,
 	Character,
-	CharacterNS,
-    Uncraftable,
+	// CharacterNS,
+    // Uncraftable,
   ],
   jsonData(objects) {
     objects = objects.filter(o => o.canFilter());
