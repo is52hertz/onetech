@@ -7,19 +7,19 @@ https://kazetsukai.github.io/onetech
 http://onetech.onehouronelife.cn
 http://moetech.onehouronelife.cn
 
-本网站直接使用[游戏数据储存库](https://github.com/jasonrohrer/OneLifeData7)中的游戏数据建立。
-它显示了物品之间的关系，让您可以探索物品是如何制作的。
+本网站直接使用[游戏数据储存库](https://github.com/jasonrohrer/OneLifeData7)中的游戏数据建立。  
+它显示了物品之间的关系，让您可以探索物品是如何制作的。  
 
-与包含游戏 “智慧” 的维基不同，本网站只包含 “知识” 。 
-本网站仅供参考。
+与包含游戏 “智慧” 的维基不同，本网站只包含 “知识” 。   
+本网站仅供参考。  
 如需更好的指南，请访问[游戏维基](https://onehouronelife.gamepedia.com/One_Hour_One_Life_Wiki)。
 
 
 ## 制作说明
 
-该项目分为两个部分： 
-- 一个节点脚本，用于处理游戏数据存储库（OneLifeData7）中的最新数据。
-- 网站本身，使用 VueJS 构建。
+该项目分为两个部分：   
+- 一个节点脚本，用于处理游戏数据存储库（OneLifeData7）中的最新数据。  
+- 网站本身，使用 VueJS 构建。  
 
 
 ### 编译过程
@@ -40,12 +40,12 @@ npm run build
 
 ### 生成脚本
 
-该脚本位于 `process` 文件夹下。
-它将从游戏数据存储库中提取最新数据（如果提供了 `download` 作为命令行参数），然后为对象生成 JSON 文件。
-它还会合成图元，并为游戏中的每个对象创建 PNG。
+该脚本位于 `process` 文件夹下。  
+它将从游戏数据存储库中提取最新数据（如果提供了 `download` 作为命令行参数），然后为对象生成 JSON 文件。  
+它还会合成图元，并为游戏中的每个对象创建 PNG。  
 
 
-需要 nodejs 建议版本为 10
+需要 nodejs 建议版本为 10  
 ``` bash
 curl -sL https://rpm.nodesource.com/setup_10.x | bash -
 sudo yum clean all && sudo yum makecache fast
@@ -62,7 +62,7 @@ yum install ImageMagick
 sudo yum install cairo cairo-devel cairomm-devel libjpeg-turbo-devel pango pango-devel pangomm pangomm-devel giflib-devel
 ```
 
-如果您的项目有超过 4096 个项目，您需要更改系统用户可以处理的上限。
+如果您的项目有超过 4096 个项目，您需要更改系统用户可以处理的上限。  
 
 打开文件: `/etc/security/limits.conf`
 
@@ -75,8 +75,9 @@ root      hard    nofile      500000
 root      soft    nofile      500000
 ```
 
-500000 是个不错的数字。我不确定最大限制是多少，但我记得 999999（size-9）对我有用。 
-保存文件后，您可能需要注销并重新登录。
+500000 是个不错的数字。  
+我不确定最大限制是多少，但我记得 999999（6-9）对我有用。   
+保存文件后，您可能需要注销并重新登录。  
 
 然后:
 
