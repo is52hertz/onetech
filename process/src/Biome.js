@@ -22,7 +22,7 @@ class Biome {
   }
 
   name() {
-    const names = ["草地", "沼泽", "黄草原", "荒地", "冻原", "沙漠", "雨林"];
+    const names = ["平原", "沼泽", "热带草原", "荒地", "冻原", "沙漠", "雨林"];
     return names[this.id];
   }
 
